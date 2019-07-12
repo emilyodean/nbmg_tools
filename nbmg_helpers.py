@@ -6,13 +6,41 @@
 import os
 
 
-def get_list_of_files(dir_name):
-    list_of_file = os.listdir(dir_name)
+def get_list_of_files(path):
+    list_of_file = os.listdir(path)
     all_files = list()
     for entry in list_of_file:
-        full_path = os.path.join(dir_name, entry)
+        full_path = os.path.join(path, entry)
         if os.path.isdir(full_path):
             all_files = all_files + get_list_of_files(full_path)
         else:
             all_files.append(full_path)
     return all_files
+
+
+def get_list_of_folders(path):
+    list_of_folders = os.listdir(path)
+    all_folders = list()
+    for entry in list_of_folders:
+        full_path = os.path.join(path, entry)
+        if os.path.isdir(full_path):
+            all_folders.append(full_path)
+    return all_folders
+
+
+def create_new_folder(path):
+    try:
+        os.mkdir(path)
+    except OSError:
+        print("Creation of the directory %s failed" % path)
+    else:
+        print("Successfully created the directory %s " % path)
+
+
+def get_list_of_tifs(path):
+    image_files = []
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            if file.endswith(".tif") or file.endswith(".TIF"):
+                image_files.append(os.path.join(root, file))
+    return image_files
