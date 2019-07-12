@@ -3,7 +3,7 @@
 # author: Emily O'Dean
 # purpose: General functions for reuse in NBMG processes
 ###
-import os
+import os, errno
 
 
 def get_list_of_files(path):
@@ -31,10 +31,19 @@ def get_list_of_folders(path):
 def create_new_folder(path):
     try:
         os.mkdir(path)
-    except OSError:
-        print("Creation of the directory %s failed" % path)
-    else:
-        print("Successfully created the directory %s " % path)
+    except OSError as exc:
+        if exc.errno != errno.EEXIST:
+            raise
+        pass
+
+
+        try:
+            os.mkdir(path)
+        except OSError as exc:
+            print("Creation of the directory %s failed" % path)
+            print(OSError.strerror)
+        else:
+            print("Successfully created the directory %s " % path)
 
 
 def get_list_of_tifs(path):
